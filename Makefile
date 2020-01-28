@@ -55,7 +55,6 @@ CORE_SRCS_FILES		:=	corewar.c \
 				scan_flags.c \
 				init_cw.c\
 				init_champ.c \
-				init_arena.c \
 				print_hexa.c \
 				operations_1.c\
 
