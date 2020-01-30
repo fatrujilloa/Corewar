@@ -6,18 +6,18 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 12:42:52 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/01/28 01:07:31 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/01/30 23:06:13 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/corewar.h"
 
-static int	ft_check_next_is_number(char **argv, int *i)
+static int	ft_check_next_is_number(char **argv, int *i) //Add '+' as possible first character ?
 {
 	int j;
 
 	j = 0;
-	(*i)++;
+	(*i)++; 
 	while (argv[*i][j])
 	{
 		if (!ft_isdigit((int)argv[*i][j]))

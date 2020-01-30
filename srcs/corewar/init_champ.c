@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 13:47:14 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/01/28 01:11:11 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/01/29 17:15:18 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	ft_check_cor_basics(char *str, int read_count)
 	return (1);
 }
 
-static int	ft_create_champ(char *str, t_cw *cw, int player_nbr)
+static int	ft_create_champ(char *str, t_cw *cw, int player_count)
 {
 	int		fd;
 	int		read_count;
@@ -60,12 +60,28 @@ static int	ft_create_champ(char *str, t_cw *cw, int player_nbr)
 		exit(ft_print_error("Reading failure"));
 	buff[sizeof(t_header) + CHAMP_MAX_SIZE] = 0;
 	ft_check_cor_basics(buff, read_count);
-	ft_memcpy(((cw->champ)[player_nbr]).name, buff + 4, PROG_NAME_LENGTH);
-	ft_memcpy(((cw->champ)[player_nbr]).comment, buff + 4 + PROG_NAME_LENGTH + 8, COMMENT_LENGTH);
-	ft_memcpy(((cw->champ)[player_nbr]).content, buff + sizeof(t_header), read_count - sizeof(t_header));
+	ft_bzero(cw->champ[player_count].content, CHAMP_MAX_SIZE);
+	ft_bzero(cw->champ[player_count].name, PROG_NAME_LENGTH + 4);
+	ft_bzero(cw->champ[player_count].comment, COMMENT_LENGTH + 1);
+	ft_memcpy(((cw->champ)[player_count]).name, buff + 4, PROG_NAME_LENGTH);
+	ft_memcpy(((cw->champ)[player_count]).comment, buff + 4 + PROG_NAME_LENGTH + 8, COMMENT_LENGTH);
+	ft_memcpy(((cw->champ)[player_count]).content, buff + sizeof(t_header), read_count - sizeof(t_header));
+	//ft_print_hexa(cw->champ[player_count].content, CHAMP_MAX_SIZE);
 	if (close(fd) == -1)
 		exit(ft_print_error("Closing failure"));
 	return (1);
+}
+
+void		ft_init_empty_champs(t_cw *cw, int player_count)
+{
+	while (player_count < MAX_PLAYERS)
+	{
+		ft_bzero(cw->champ[player_count].content, CHAMP_MAX_SIZE);
+		ft_bzero(cw->champ[player_count].name, PROG_NAME_LENGTH + 4);
+		ft_bzero(cw->champ[player_count].comment, COMMENT_LENGTH + 1);
+		cw->prcs[player_count] = NULL;
+		player_count++;
+	}
 }
 
 int			ft_init_champs(int argc, char **argv, t_cw *cw)
@@ -74,16 +90,22 @@ int			ft_init_champs(int argc, char **argv, t_cw *cw)
 	int	i;
 
 	i = cw->first_champ_i;
+	//ft_printf("\n\n cw->first_champ_i = %d and argc = %d \n\n", cw->first_champ_i, argc);
 	player_count = 0;
 	while (i < argc && argv[i])
 	{
 		if (ft_strcmp(argv[i], "-n") == 0)
 			ft_printf("Attention aux -n apres\n");
+		//ft_printf("Creating champ %d\n", player_count);
 		ft_create_champ(argv[i], cw, player_count);
 		i++;
 		player_count++;
 		if (player_count > MAX_PLAYERS)
 			exit(ft_print_error("Too many players"));
 	}
+	//ft_printf("Printing again contents\n");
+	//ft_print_hexa(cw->champ[0].content, CHAMP_MAX_SIZE);
+	//ft_print_hexa(cw->champ[1].content, CHAMP_MAX_SIZE);
+	ft_init_empty_champs(cw, player_count);
 	return (player_count);
 }

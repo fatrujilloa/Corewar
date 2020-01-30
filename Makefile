@@ -56,7 +56,13 @@ CORE_SRCS_FILES		:=	corewar.c \
 				init_cw.c\
 				init_champ.c \
 				print_hexa.c \
-				operations_1.c\
+				get_args_1.c \
+				get_args_2.c \
+				op_aff_logical.c \
+				op_arithmetic_forks.c \
+				op_ld.c \
+				op_live_st_zjmp.c \
+				op_aux_functions.c \
 
 ASM_HEADERS_FILES	:=	asm.h \
 				op.h

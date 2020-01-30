@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 17:49:40 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/01/28 01:42:41 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/01/30 23:04:01 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,21 +71,34 @@ void		ft_exec_processes(t_cw *cw, t_process *prcs, int i)
 
 	while (prcs)
 	{
-		//ft_printf("The process #%d of player %d(%s) has PC = %d and wait_until = %d\n", j, i, cw->champ[i].name, prcs->pc, prcs->wait_until);
+		ft_printf("The process #%d of player %d(%s) has PC = %d and wait_until = %d\n", j, i, cw->champ[i].name, prcs->pc, prcs->wait_until);
 		op_code = (unsigned char)cw->arena[prcs->pc];
+		ft_printf("Potential op_code = ");
+		ft_print_hexa((char*)&op_code, 1);
 		if (cw->nb_cycles < prcs->wait_until)
+		{	
 			prcs = prcs->next;
-		else if (op_code == 0 || op_code > 16) //op_code > 16
+			continue ;
+		}
+		if (!(op_code == 0 || op_code > 16))
 		{
-			prcs->pc++;
-			prcs = prcs->next;	
+			if (cw->nb_cycles == prcs->wait_until && prcs->valid_arg == 1)
+				op_tab[op_code - 1].function(cw, prcs, i, op_tab[op_code - 1]);
+			else if (cw->nb_cycles == prcs->wait_until)
+				prcs->pc = (prcs->pc + prcs->arg.total_size) % MEM_SIZE;
+			else
+			{
+				prcs->wait_until = cw->nb_cycles + op_tab[op_code - 1].cycle - 1;
+				ft_get_args(cw, prcs, &prcs->arg, op_tab[op_code - 1]);
+				ft_printf("For this operation valid_arg = %d\n", prcs->valid_arg);
+			}
 		}
 		else
-		{		
-			//ft_printf("Executing action with op_code = %d\n", op_code);
-			op_tab[op_code - 1].function(cw, prcs, i, op_tab[op_code - 1]);
-			prcs = prcs->next;
+		{	
+			ft_printf("\nFailed to recognize operation\n");
+			prcs->pc = (prcs->pc + 1) % MEM_SIZE;
 		}
+		prcs = prcs->next;
 		j++;
 	}
 }
@@ -93,14 +106,17 @@ void		ft_exec_processes(t_cw *cw, t_process *prcs, int i)
 void		ft_check_processes(t_cw *cw, t_process *prcs, int i)
 {
 	t_process	**head_prcs;
+	t_process	*tmp;
 
 	//ft_printf("Now checking processes. The number of processes is %d\n", cw->nb_prcs);
-	//ft_print_prcs(prcs);
+	ft_print_prcs(prcs);
 	head_prcs = &prcs;
+	//ft_printf("\n\n0\n\n");
+	//ft_printf("Testing process with alive = %d\n", prcs->alive);
 	(void)i;
 	while(head_prcs && *head_prcs && (*head_prcs)->alive == 0)
 	{
-		//ft_printf("Testing process with alive = %d\n", (*head_prcs)->alive);
+		//ft_printf("\n\n\n\nTesting process with alive = %d\n\n\n\n\n", (*head_prcs)->alive);
 		cw->nb_prcs--;
 		//ft_printf("Deleting head\n");
 		ft_lstdelnext(head_prcs, NULL);
@@ -112,20 +128,25 @@ void		ft_check_processes(t_cw *cw, t_process *prcs, int i)
 	//	ft_printf("OUT\n");
 	if (!head_prcs || !*head_prcs)
 		return ;
-	prcs = *head_prcs;
-	while (prcs)
+	//ft_printf("GOT HERE?\n");
+	tmp = *head_prcs;
+	while (tmp)
 	{
-		if (prcs->next && prcs->next->alive == 0)
+		if (tmp->next && tmp->next->alive == 0)
 		{
+	//		ft_printf("\n\n1\n\n");
 			cw->nb_prcs--;
-			ft_lstdelnext(head_prcs, &prcs);
-			//ft_printf("Deleting node\n");
+			ft_lstdelnext(head_prcs, &tmp);
+	//		ft_printf("Deleting node\n");
 		}
 		else
 		{
-			prcs->alive = 0;
-			prcs = prcs->next;
+		//	ft_printf("\n\n2\n\n");
+			tmp->alive = 0;
+			tmp = tmp->next;
 		}
+		//if (prcs->alive == 0)
+		//	exit(0);
 	}
 }
 
@@ -134,23 +155,33 @@ int			ft_cw(t_cw *cw)
 	int		i;
 	int		live_counter;
 
+//	ft_printf("Starting\n");
 	live_counter = 0;
 	while(cw->nbr_cycles_to_die > 0 && (cw->dump_flag == - 1 || cw->nb_cycles < cw->dump_flag))
 	{
 		cw->nb_cycles++;
-		//ft_printf("Currently at cycle %d\n", cw->nb_cycles);
+		ft_printf("\n\nCurrently at cycle %d\n\n", cw->nb_cycles);
 		//ft_print_arena(cw);
 		if (cw->nb_cycles % cw->nbr_cycles_to_die == 0)
 		{
 			live_counter++;
+			//ft_printf("cw->nb_cycles = %d, cw->nb_cycles = %d, live_counter = %d\n", cw->nb_cycles, cw->nb_cycles, live_counter);
 			i = -1;
 			while (++i < cw->nb_players)
-				ft_check_processes(cw, cw->prcs[i], i);
+			{
+			//	ft_printf("\n\nPrinting prcs %d\n", i);
+			//	ft_print_prcs(cw->prcs[i]);
+			//	ft_check_processes(cw, cw->prcs[i], i);
+			//	ft_printf("RePrinting prcs %d\n", i);
+			//	ft_print_prcs(cw->prcs[i]);
+			}
 			if (cw->nb_prcs <= 1)
 				return (cw->last_alive);
 			if ((live_counter % NBR_LIVE) == 0)
+			{
 				cw->nbr_cycles_to_die -= CYCLE_DELTA;
-				ft_printf("Reduction of cycles_to_die\n");
+				//ft_printf("Reduction of cycles_to_die\n");
+			}
 		}
 		i = -1;
 		while (i++ < cw->nb_players)
@@ -163,6 +194,7 @@ static int	ft_process_args(int argc, char **argv, t_cw *cw)
 {
 	cw->first_champ_i = ft_scan_flags(argc, argv, cw);
 	cw->nb_players = ft_init_champs(argc, argv, cw);
+			//ft_printf("Here\n");
 	return (1);
 }
 
@@ -185,17 +217,16 @@ int			main(int argc, char **argv)
 	ft_process_args(argc, argv, &cw);
 	ft_init_cw(&cw);
 
-	/*
-	ft_printf("Le flag dump_flag est fixe a %i\n", cw.dump_flag);
+	/*ft_printf("Le flag dump_flag est fixe a %i\n", cw.dump_flag);
 	ft_printf("Le flag number_flag est fixe a %i\n", cw.number_flag);
-	ft_printf("{GREEN}Name{EOC}\n");
-	ft_print_hexa(cw.champ[0].name, PROG_NAME_LENGTH);
-	ft_printf("{GREEN}Comment{EOC}\n");
-	ft_print_hexa(cw.champ[0].comment, COMMENT_LENGTH);
-	ft_printf("{GREEN}Content{EOC}\n");
+	//ft_printf("{GREEN}Name{EOC}\n");
+	//ft_print_hexa(cw.champ[0].name, PROG_NAME_LENGTH);
+	//ft_printf("{GREEN}Comment{EOC}\n");
+	//ft_print_hexa(cw.champ[0].comment, COMMENT_LENGTH);
+	//ft_printf("{GREEN}Content{EOC}\n");
 	ft_print_hexa(cw.champ[0].content, CHAMP_MAX_SIZE);
 	*/
-
+	//ft_print_arena(&cw);
 	winner = ft_cw(&cw);
 	if (cw.dump_flag == -1)
 		ft_declare_winner(&cw, winner);

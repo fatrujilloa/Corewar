@@ -3,7 +3,7 @@
 
 ld      %255, r1
 aff     r1
-#st      r1, 65
+st      r1, 65
 ld      %100, r2
 aff     r2
 add     r1, r2, r3
