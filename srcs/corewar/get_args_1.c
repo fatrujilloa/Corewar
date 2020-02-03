@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:35:04 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/01/30 22:39:32 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/02 17:18:05 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void    ft_arg_size(t_process *prcs, t_arg *arg)
         {
             arg->size[i] = 0;
             prcs->valid_arg = 0;
-        //ft_printf("arg->size[%d] = %u\n", i, arg->size[i]);
         }
         arg->total_size += arg->size[i];
     }
@@ -44,6 +43,7 @@ void    ft_init_arg(t_arg *arg, unsigned char nb_args)
     ft_bzero(arg->type, MAX_ARGS_NUMBER);
     ft_bzero(arg->size, MAX_ARGS_NUMBER);
     ft_bzero(arg->int_value, MAX_ARGS_NUMBER);
+    ft_bzero(arg->real_value, MAX_ARGS_NUMBER);
     i = -1;
     while (++i < MAX_ARGS_NUMBER)
         ft_bzero(arg->value[i], MAX_SIZE);
@@ -80,8 +80,15 @@ void    ft_get_args(t_cw *cw, t_process *prcs, t_arg *arg, t_op op)
     }
     i = -1;
     ft_arg_size(prcs, arg);
+    if (op.opcode == 11 || op.opcode == 12)
+    {
+        arg->size[1] = (arg->size[1] == 1) ? 1 : 2;
+        arg->size[2] = (arg->size[2] == 1) ? 1 : 2;
+    }
     if (prcs->valid_arg == 1)
         ft_arg_values(cw, prcs, arg);
+    if (prcs->valid_arg == 1)
+        ft_real_values(cw, prcs, arg);
     if (prcs->valid_arg == 1 && ft_check_operation(prcs, op))
         prcs->valid_arg = -2;
 }

@@ -6,11 +6,43 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:38:28 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/01/30 22:38:33 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/02 18:03:30 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/corewar.h"
+
+
+unsigned int    ft_recover_value_arena(t_cw *cw, int pc, int size)
+{
+    int             i;
+    unsigned int    v;
+
+    i = -1;
+    v = 0;
+    while (++i < size)
+       v = (256 * v + (unsigned char)cw->arena[(pc + i) % MEM_SIZE]);
+    return (v);
+}
+
+void    ft_real_values(t_cw *cw, t_process *prcs, t_arg *arg)
+{
+    int i;
+    int aux;
+
+    aux = 2;
+    i = -1;
+    while (++i < arg->nb_args && arg->size[i])
+    {
+        if (arg->type[i] == REG_CODE)
+            arg->real_value[i] = ft_str_to_int(prcs->reg[arg->int_value[i] - 1], REG_SIZE);
+        else if (arg->type[i] == IND_CODE)
+            arg->real_value[i] = ft_recover_value_arena(cw, (prcs->pc + arg->int_value[i]) % MEM_SIZE, 4);
+        else
+            arg->real_value[i] = arg->int_value[i];
+        aux += arg->size[i];
+    }
+}
 
 void    ft_arg_value(t_cw *cw, int pc, t_arg *arg, int i) //If indirect > 4096 (size == IND_SIZE) should be an error ?
 {
@@ -24,7 +56,7 @@ void    ft_arg_value(t_cw *cw, int pc, t_arg *arg, int i) //If indirect > 4096 (
         arg->value[i][j] = (unsigned char)cw->arena[(pc + j) % MEM_SIZE];
         v = 256 * v + arg->value[i][j];
     }
-    arg->int_value[i] = v;
+    arg->int_value[i] = arg->size[i] == IND_SIZE ? v % MEM_SIZE : v;
 }
 
 void     ft_arg_values(t_cw *cw, t_process *prcs, t_arg *arg)
@@ -37,7 +69,6 @@ void     ft_arg_values(t_cw *cw, t_process *prcs, t_arg *arg)
     while (++i < arg->nb_args && arg->size[i])
     {
         ft_arg_value(cw, (prcs->pc + aux) % MEM_SIZE, arg, i);
-        //ft_printf("arg->type[%d] = %u, arg->int_value[%d] = %u\n", i, arg->type[i], i, arg->int_value[i]);
         if (arg->type[i] == REG_CODE && (arg->int_value[i] == 0 ||
             arg->int_value[i] > REG_NUMBER)) //This says that arg is not valid since reg value does not exist
             {
@@ -53,7 +84,6 @@ int			ft_check_operation(t_process *prcs, t_op op)
 	t_arg	*arg;
 
 	arg = &prcs->arg;	
-	ft_printf("Checking operation with op.opcode = %d\n", op.opcode);
 	if ((op.opcode == 1) || (op.opcode == 9) || (op.opcode == 12) || (op.opcode == 15))
 		return (1);
 	if (op.opcode == 2)

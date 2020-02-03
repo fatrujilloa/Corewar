@@ -69,6 +69,7 @@ CORE_SRCS_FILES		:=	corewar.c \
 				aux_functions.c \
 				init_aux_functions.c \
 				init_cw.c\
+				init_champ.c \
 				print_hexa.c \
 				get_args_1.c \
 				get_args_2.c \

@@ -1,15 +1,41 @@
 .name    "st"
 .comment "Invincible"
 
+fork   %514
+st      r1, r15
+aff     r15
+sti     r1, %120, r15
+ld      %100, r2
+aff     r2
+fork    %1
+lld     2049, r4
+#sti     r1, %128, r4
+lld     %2049, r4
+#sti     r1, %128, r4
+ld     2049, r4
+#sti     r1, %128, r4
+ld     %2049, r4
+#sti     r1, %128, r4
+ld      %12345, r5
+#sti     r9, 256, r5
+aff     r4
+#sti     r2, 60, r2
+live    %2
+ld      %256, r10
+aff     r10
+#sti     r10, %128, r4
+#aff     r1
 ld      %255, r1
 aff     r1
 st      r1, 65
-ld      %100, r2
-aff     r2
 add     r1, r2, r3
+aff     r3
+sti     r1, %100, r3
 aff     r3
 sub     r3, r1, r2
 aff     r2
+#sti     r1, %100, r3
+aff     r3
 ld      %1000, r1
 aff     r1
 sub     r2, r1, r2
@@ -20,6 +46,8 @@ ld      %11, r5
 aff     r5
 and     r4, r5, r6
 aff     r6
+and     1, %123, r6
+aff     r6
 or      r4, r5, r6
 aff     r6
 xor     r4, r5, r6
@@ -28,5 +56,7 @@ ldi     %20, %2, r6
 aff     r6
 ld      %100, r2
 aff     r2
+ld      %0, r10 
+zjmp    %511
 sti     r2, %20, %4
 live    %1

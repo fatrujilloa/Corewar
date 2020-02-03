@@ -8,6 +8,6 @@ then
         i=$(( $i + 1 ))
     done
 else
-        ./corewar -dump $2 test.cor test.cor | tail -64 > a && ./corewar_r -d $2 test.cor test.cor | tail -n +4 | cut -c 10- > b && diff a b
+        ./corewar -dump $2 $3 $4 | tail -64 > a && ./corewar_r -d $2 $3 $4 | tail -n +4 | cut -c 10- > b && diff a b
         echo "$2-th cycle"
 fi
