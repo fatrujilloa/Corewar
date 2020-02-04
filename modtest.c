@@ -1,17 +1,19 @@
 #include <stdio.h>
 
+ft_hex_to_binary(unsigned int a)
+{
+    
+}
+
 int main()
 {
-    unsigned char byte = 164;
-    unsigned char a = 128;
-    unsigned char b = 64;
-    int i = -1;
+    unsigned int a;
+    unsigned int b;
 
-    printf("BYTE = %d\n",  byte);
-    while (++i < 3)
-    {
-        printf("arg->type[%d]  = %d", i, ((a + b) & byte) >> (6 - 2 * i));
-        a = a / 4;
-        b = b / 4;
-    }
+    a = (unsigned int)-804781820;
+    b = 4278124800;
+    printf("b = %d, a = %u\n", b, a);
+    -16842496;
+    -804781820;
+    4278124800;
 }

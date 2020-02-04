@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 12:25:55 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/03 23:57:10 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 23:11:18 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct		s_process
 	char			carry;
 	char			champ;
 	char			alive;
+	char			current_op;
 	int				pc;
 	unsigned int	nb;
 	unsigned char	reg[REG_NUMBER][REG_SIZE];
@@ -83,7 +84,7 @@ typedef struct		s_cw
 	unsigned int	nb_prcs;
 	int				nb_players;
 	unsigned int	nb_cycles;
-	unsigned int	nbr_cycles_to_die;
+	int				nbr_cycles_to_die;
 	unsigned int	dump;
 	char			dump_flag;
 	//int				number_flag;
