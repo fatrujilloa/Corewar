@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 12:25:55 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/02 17:24:56 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/03 23:57:10 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct		s_champ
 	char			name[PROG_NAME_LENGTH + 4];
 	char			comment[COMMENT_LENGTH + 1];
 	//unsigned int	nbr;
-	//int		champ_size;
+	unsigned int	size;
 	//int		champ_position;
 }					t_champ;
 
@@ -76,7 +76,10 @@ typedef struct		s_cw
 	t_process		*prcs;
 	t_process		**head;
 	t_champ			champ[MAX_PLAYERS];
+	unsigned int	last_prcs;
 	int				last_alive;
+	unsigned int	live_counter;
+	unsigned int	last_wipe;
 	unsigned int	nb_prcs;
 	int				nb_players;
 	unsigned int	nb_cycles;
@@ -85,11 +88,13 @@ typedef struct		s_cw
 	char			dump_flag;
 	//int				number_flag;
 	unsigned int	champ_nbrs[MAX_PLAYERS];
+	char			alive[MAX_PLAYERS];
 }					t_cw;
 
 //int				ft_scan_flags(int argc, char **argv, t_cw *cw);
 //int				ft_init_champs(int argc, char **argv, t_cw *cw);
 
+void    		ft_strnrev(unsigned char *str, unsigned int size);
 void			ft_get_args(t_cw *cw, t_process *prcs, t_arg *arg, t_op op);
 int				ft_check_operation(t_process *prcs, t_op op);
 void     		ft_arg_values(t_cw *cw, t_process *prcs, t_arg *arg);
@@ -114,6 +119,7 @@ int				ft_display_options(void);
 int				ft_print_error(char *str);
 void			ft_print_op(t_process *prcs, t_arg arg, t_op op);
 int				ft_print_hexa(char *str, int size);
+char   			*ft_spaces(unsigned int n);
 /*
 ** Auxiliar initialize functions
 */
@@ -122,7 +128,7 @@ long long int	ft_mod_atoi(const char *str);
 int				ft_isstrnum(char *str);
 int				ft_check_cor_basics(char *str, int read_count);
 int				ft_check_for_suffix(char *str);
-void    		ft_strnrev(unsigned char *str, unsigned int size);
+//void    		ft_strnrev(unsigned char *str, unsigned int size);
 /*
 ** Auxiliar op functions
 */

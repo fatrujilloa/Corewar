@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:38:28 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/02 18:03:30 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 01:20:49 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ void    ft_arg_value(t_cw *cw, int pc, t_arg *arg, int i) //If indirect > 4096 (
         arg->value[i][j] = (unsigned char)cw->arena[(pc + j) % MEM_SIZE];
         v = 256 * v + arg->value[i][j];
     }
-    arg->int_value[i] = arg->size[i] == IND_SIZE ? v % MEM_SIZE : v;
+    //arg->int_value[i] = arg->size[i] == IND_SIZE ? v % MEM_SIZE : v;
+    arg->int_value[i] = v;
+    //ft_printf("arg->int_value[%d] = %d\n", i, arg->int_value[i]);
 }
 
 void     ft_arg_values(t_cw *cw, t_process *prcs, t_arg *arg)

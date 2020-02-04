@@ -37,6 +37,7 @@ ASM_SRCS_FILES		:=	asm.c \
 				third_turn.c \
 				utils_3.c \
 				ft_printf_binaire.c \
+				../corewar/aux_functions.c \
 				../corewar/op_aff_logical.c \
 				../corewar/op_arithmetic_forks.c \
 				../corewar/op_ld.c \
@@ -53,6 +54,7 @@ DASM_SRCS_FILES		:=	dasm.c \
 				then.c \
 				op.c \
 				write_argu.c \
+				../corewar/aux_functions.c \
 				../corewar/op_aff_logical.c \
 				../corewar/op_arithmetic_forks.c \
 				../corewar/op_ld.c \

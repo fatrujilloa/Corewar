@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:50:25 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/03 00:51:10 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 02:08:44 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,8 @@ void    ft_add(t_cw *cw, t_process *prcs, int i, t_op op) //    3 REG
     }
     ft_print_op(prcs, prcs->arg, op);
     prcs->pc = (prcs->pc + arg.total_size) % MEM_SIZE;
-    if (ft_str_to_int(prcs->reg[arg.int_value[2] - 1], REG_SIZE) == 0)
-        prcs->carry = 1;
-    else
-        prcs->carry = 0;
+    //ft_update_process(cw, prcs, op);
+    prcs->carry = (ft_str_to_int(prcs->reg[arg.int_value[2] - 1], REG_SIZE) == 0) ? 1 : 0;
 }
 
 void    ft_sub(t_cw *cw, t_process *prcs, int i, t_op op) // 3 REG
@@ -69,10 +67,8 @@ void    ft_sub(t_cw *cw, t_process *prcs, int i, t_op op) // 3 REG
     }
     ft_print_op(prcs, prcs->arg, op);
     prcs->pc = (prcs->pc + arg.total_size) % MEM_SIZE;
-    if (ft_str_to_int(prcs->reg[arg.int_value[2] - 1], REG_SIZE) == 0)
-        prcs->carry = 1;
-    else
-        prcs->carry = 0;
+    //ft_update_process(cw, prcs, op);
+    prcs->carry = (ft_str_to_int(prcs->reg[arg.int_value[2] - 1], REG_SIZE) == 0) ? 1 : 0;
 }
 
 void    ft_fork(t_cw *cw, t_process *prcs, int i, t_op op)
@@ -86,13 +82,12 @@ void    ft_fork(t_cw *cw, t_process *prcs, int i, t_op op)
     j = -1;
     while (++j < IND_SIZE)
         v = 256 * v + (unsigned char)cw->arena[(prcs->pc + 1 + j) % MEM_SIZE];
-    if (!ft_new_process(cw, cw->head, prcs, (prcs->pc + v % IDX_MOD) % MEM_SIZE))
+    if (!ft_new_process(cw, cw->head, prcs, (prcs->pc + (short int)v % IDX_MOD) % MEM_SIZE))
         return ; //I Have a malloc here
     
     cw->nb_prcs++;
-    ft_printf("P   %u | %s %d (%d)\n", prcs->nb + 1, op.name, v, prcs->pc + v);
+    ft_printf("P%s%u | %s %hd (%d)\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, v, (prcs->pc + (short int)v % IDX_MOD) % MEM_SIZE);
     prcs->pc = (prcs->pc + 1 + IND_SIZE) % MEM_SIZE;
-    ft_update_process(cw, prcs, op);
 }
 
 void    ft_lfork(t_cw *cw, t_process *prcs, int i, t_op op)
@@ -109,7 +104,6 @@ void    ft_lfork(t_cw *cw, t_process *prcs, int i, t_op op)
     if (!ft_new_process(cw, cw->head, prcs, (prcs->pc + v) % MEM_SIZE))
         return ; //I Have a malloc here
     cw->nb_prcs++;
-    ft_printf("P   %u | %s %d (%d)\n", prcs->nb + 1, op.name, v, prcs->pc + v);
+    ft_printf("P%s%u | %s %d (%d)\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, v, prcs->pc + v);
     prcs->pc = (prcs->pc + 1 + IND_SIZE) % MEM_SIZE;
-    ft_update_process(cw, prcs, op);
 }

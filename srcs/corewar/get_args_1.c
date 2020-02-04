@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:35:04 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/02 17:18:05 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/03 22:42:36 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,23 +72,31 @@ void    ft_get_args(t_cw *cw, t_process *prcs, t_arg *arg, t_op op)
     a = 128;
     b = 64;
     i = -1;
-    while (i++ < arg->nb_args)
+    //ft_printf("BYTE = %d\n",  byte);
+    while (++i < arg->nb_args)
     {
         arg->type[i] = ((a + b) & byte) >> (6 - 2 * i);
         a = a / 4;
         b = b / 4;
     }
-    i = -1;
     ft_arg_size(prcs, arg);
-    if (op.opcode == 11 || op.opcode == 12)
+    if (op.opcode == 10 || op.opcode == 11 || op.opcode == 14)
     {
-        arg->size[1] = (arg->size[1] == 1) ? 1 : 2;
-        arg->size[2] = (arg->size[2] == 1) ? 1 : 2;
+        i = -1;
+        while (++i < arg->nb_args)
+            arg->size[i] = (arg->type[i] == DIR_CODE) ? IND_SIZE : arg->size[i];
+        arg->total_size = 2 + arg->size[0] + arg->size[1] + arg->size[2];
     }
+    /*ft_printf("\n ARG TYPES: \n");
+    i = -1;
+    while(++i < arg->nb_args)
+        ft_printf("arg->type[%d] = %d, arg->size[%d] = %d\n", i, arg->type[i], i, arg->size[i]);
+    */
     if (prcs->valid_arg == 1)
         ft_arg_values(cw, prcs, arg);
     if (prcs->valid_arg == 1)
         ft_real_values(cw, prcs, arg);
     if (prcs->valid_arg == 1 && ft_check_operation(prcs, op))
         prcs->valid_arg = -2;
+    //ft_printf(" prcs->valid_arg for op = %s is equal to %d\n", op.name,  prcs->valid_arg);
 }

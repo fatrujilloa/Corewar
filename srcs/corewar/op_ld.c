@@ -6,12 +6,11 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:43:36 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/03 00:52:08 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 02:00:40 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/corewar.h"
-
 
 void    ft_ld(t_cw *cw, t_process *prcs, int i, t_op op) // DIR | IND, REG
 {
@@ -19,6 +18,7 @@ void    ft_ld(t_cw *cw, t_process *prcs, int i, t_op op) // DIR | IND, REG
     t_arg   arg;
     
     (void)i;
+    (void)cw;
     arg = prcs->arg;
     j = -1;
     if (arg.type[0] == IND_CODE)
@@ -27,118 +27,81 @@ void    ft_ld(t_cw *cw, t_process *prcs, int i, t_op op) // DIR | IND, REG
     else
         while (++j < DIR_SIZE)
              prcs->reg[arg.int_value[1] - 1][j] = arg.value[0][j];
-    ft_print_op(prcs, prcs->arg, op);
+    ft_printf("P%s%u | %s %d r%d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.real_value[0], arg.int_value[1]);
     prcs->pc = (prcs->pc + arg.total_size) % MEM_SIZE;
-    if (ft_str_to_int(prcs->reg[arg.int_value[1] - 1], REG_SIZE) == 0)
-        prcs->carry = 1;
-    else
-        prcs->carry = 0;
+    //ft_update_process(cw, prcs, op);
+    prcs->carry = (arg.real_value[0] == 0) ? 1 : 0;
 }
 
 void    ft_lld(t_cw *cw, t_process *prcs, int i, t_op op) // DIR | IND, REG
 {
     int     j;
     t_arg   arg;
-    
-        arg = prcs->arg;
 
     (void)i;
-    //ft_printf("arg.type[0] = %d, arg.type[1] = %d, arg.size[1] = %d, arg.size[1] = %d\n", arg.type[0], arg.type[1], arg.size[0], arg.size[1]);
-    //ft_printf("arg.int_value[0] = %d, arg.int_value[1] = %d, arg.real_value[1] = %d, arg.real_value[1] = %d\n", arg.int_value[0], arg.int_value[1], arg.real_value[0], arg.real_value[1]);
-
+    (void)cw;
+    arg = prcs->arg;
     j = -1;
     if (arg.type[0] == IND_CODE)
-        while (++j < REG_SIZE)
-            prcs->reg[arg.int_value[1] - 1][j] = cw->arena[(prcs->pc + j + arg.int_value[0]) % MEM_SIZE];
+    {
+        *(unsigned int*)prcs->reg[arg.int_value[1] - 1] = arg.real_value[0] / 65536;;
+        ft_strnrev(prcs->reg[arg.int_value[1] - 1], 4);
+        ft_printf("P%s%u | %s %d r%d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.real_value[0] / 65536, arg.int_value[1]);
+    }
     else
+    {   
         while (++j < DIR_SIZE)
-             prcs->reg[arg.int_value[1] - 1][j] = arg.value[0][j];
-    //ft_printf("Le joueur %d(%s) a executé %s and the value in register %d is %u at cycle = %d \n", i, cw->champ[i].name, op.name, arg.int_value[1], ft_str_to_int(prcs->reg[arg.int_value[1] - 1], REG_SIZE), cw->nb_cycles);
-    ft_printf("P   %u | %s %d r%d\n", prcs->nb + 1, op.name, ft_str_to_int(prcs->reg[arg.int_value[1] - 1], REG_SIZE), arg.int_value[1]); //
+        prcs->reg[arg.int_value[1] - 1][j] = arg.value[0][j];
+        ft_printf("P%s%u | %s %d r%d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.real_value[0], arg.int_value[1]);
+    }
     prcs->pc = (prcs->pc + arg.total_size) % MEM_SIZE;
-    if (ft_str_to_int(prcs->reg[arg.int_value[1] - 1], REG_SIZE) == 0)
-        prcs->carry = 1;
-    else
-        prcs->carry = 0;
+    //ft_update_process(cw, prcs, op);
+    prcs->carry = (arg.real_value[0] == 0) ? 1 : 0;
 }
-
 
 void    ft_ldi(t_cw *cw, t_process *prcs, int i, t_op op) //ARG, DIR | REG, REG // Done following instructions from ˜Sujet epitech"
 {
     int             j;
-    unsigned int    a;
-    unsigned int    b;
-    unsigned int    s;
-    t_arg   arg;
+    int             address_int;
+    unsigned int    address_uint;
+    t_arg           arg;
     
-
     (void)i;
     arg = prcs->arg;
-    a = (arg.type[0] == REG_CODE) ? ft_str_to_int(prcs->reg[arg.int_value[0] - 1], REG_SIZE) : ft_ind_arg(cw, (prcs->pc + 2) % MEM_SIZE);
-    b = (arg.type[1] == REG_CODE) ? ft_str_to_int(prcs->reg[arg.int_value[1] - 1], REG_SIZE) : ft_ind_arg(cw, (prcs->pc + 2 + (arg.size[0] == 1 ? 1 : IND_SIZE)) % MEM_SIZE);
-    arg.int_value[2] = (unsigned char)cw->arena[(prcs->pc + 2 + (arg.size[0] == 1 ? 1 : IND_SIZE) + (arg.size[1] == 1 ? 1 : IND_SIZE)) % MEM_SIZE];
-    s = (arg.type[0] == IND_CODE) ? 0 : a;
-    j = -1;
-    if (arg.type[0] == IND_CODE)
-        while (++j < IND_SIZE)
-            s = (256 * s + (unsigned char)cw->arena[(prcs->pc + j + a % IDX_MOD) % MEM_SIZE]) % IDX_MOD;
-    s = (s + b) % IDX_MOD;
-
-    //ft_printf("ldi | Arg types = %d, %d, %d, arg_int_values = %u, %u, %u\n", arg.type[0], arg.type[1], arg.type[2], arg.int_value[0], arg.int_value[1], arg.int_value[2]);
-    //ft_printf("ldi | CURRENT PC = %d, values = %u, %u, Adress to collect info = %u\n", prcs->pc, a, b, prcs->pc + s);
-
-    //ft_printf("CURRENT PC = %d, values = %u, %u, Adress to collect info = %u\n", prcs->pc, a, b, prcs->pc + s);
-
+    address_int = (prcs->pc + ((int)arg.real_value[0] + (int)arg.real_value[1])
+        % IDX_MOD) % MEM_SIZE;
+    address_uint = (address_int + MEM_SIZE) % MEM_SIZE;
     j = -1;
     while (++j < REG_SIZE)
-    {
-        prcs->reg[arg.int_value[2] - 1][j] = (unsigned char)cw->arena
-            [(prcs->pc + j + s) % MEM_SIZE];
-        //ft_printf("ldi | reg[%d][%d] = %u\n", arg.int_value[2] - 1, j, prcs->reg[arg.int_value[2] - 1][j]);
-    }
-    ft_print_op(prcs, prcs->arg, op);
-    prcs->pc = (prcs->pc + 2 + (arg.size[0] == 1 ? 1 : IND_SIZE) + (arg.size[1] == 1 ? 1 : IND_SIZE) + 1) % MEM_SIZE;
-    //ft_printf("ldi | Le joueur %d(%s) a executé %s at cycle = %d\n", i, cw->champ[i].name, op.name, cw->nb_cycles);
-    //ft_update_process(cw, prcs, op);
-
-    if (ft_str_to_int(prcs->reg[arg.int_value[2] - 1], REG_SIZE) == 0)
-        prcs->carry = 1;
-    else
-        prcs->carry = 0;
+        prcs->reg[arg.int_value[2] - 1][j] = cw->arena[(address_uint + j) % MEM_SIZE];
+    ft_printf("P%s%u | %s %d %d r%d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.real_value[0], arg.real_value[1], arg.int_value[2]);
+    ft_printf("       | -> load from %d + %d = %d (with pc and mod %d)\n",
+        arg.real_value[0], arg.real_value[1], arg.real_value[0]
+        + arg.real_value[1], address_int);
+    prcs->pc = (prcs->pc + arg.total_size) % MEM_SIZE;
 }
 
 void    ft_lldi(t_cw *cw, t_process *prcs, int i, t_op op) //ARG, DIR | REG, REG
 {
     int             j;
-    unsigned int    a;
-    unsigned int    b;
-    unsigned int    s;
-    t_arg   arg;
+    int             address_int;
+    unsigned int    address_uint;
+    t_arg           arg;
     
+    (void)i;
     arg = prcs->arg;
-    a = (arg.type[0] == REG_CODE) ? ft_str_to_int(prcs->reg[arg.int_value[0] - 1], REG_SIZE) : ft_ind_arg(cw, prcs->pc + 2);
-    b = (arg.type[1] == REG_CODE) ? ft_str_to_int(prcs->reg[arg.int_value[1] - 1], REG_SIZE) : ft_ind_arg(cw, prcs->pc + 2 + (arg.size[0] == 1 ? 1 : IND_SIZE));
-    arg.int_value[2] = (unsigned char)cw->arena[(prcs->pc + 2 + (arg.size[0] == 1 ? 1 : IND_SIZE) + (arg.size[1] == 1 ? 1 : IND_SIZE)) % MEM_SIZE];
-    s = (arg.type[0] == IND_CODE) ? 0 : a;
-    j = -1;
-    if (arg.type[0] == IND_CODE)
-        while (++j < IND_SIZE)
-            s = (256 * s + (unsigned char)cw->arena[(prcs->pc + j + a) % MEM_SIZE]);
-    s = s + b;
+    address_int = (prcs->pc + (int)arg.real_value[0] + (int)arg.real_value[1])
+        % MEM_SIZE;
+    address_uint = (address_int + MEM_SIZE) % MEM_SIZE;
     j = -1;
     while (++j < REG_SIZE)
-    {
-        prcs->reg[arg.int_value[2] - 1][j] = (unsigned char)cw->arena
-            [(prcs->pc + j + s) % MEM_SIZE];
-        //ft_printf("reg[%d][%d] = %u\n", arg.int_value[2] - 1, j, prcs->reg[arg.int_value[2] - 1][j]);
-    }
-    prcs->pc = (prcs->pc + 2 + (arg.size[0] == 1 ? 1 : IND_SIZE) + (arg.size[1] == 1 ? 1 : IND_SIZE) + 1) % MEM_SIZE;
-    ft_printf("Le joueur %d(%s) a executé %s at cycle = %d\n", i, cw->champ[i].name, op.name, cw->nb_cycles);
+        prcs->reg[arg.int_value[2] - 1][j] = cw->arena[(address_uint + j) % MEM_SIZE];
+    ft_printf("P%s%u | %s %d %d r%d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.real_value[0], arg.real_value[1], arg.int_value[2]);
+    ft_printf("       | -> load from %d + %d = %d (with pc %d)\n",
+        arg.real_value[0], arg.real_value[1], arg.real_value[0]
+        + arg.real_value[1], prcs->pc + (int)arg.real_value[0] + (int)arg.real_value[1]);
+    prcs->pc = (prcs->pc + arg.total_size) % MEM_SIZE;
     //ft_update_process(cw, prcs, op);
-
-    if (ft_str_to_int(prcs->reg[arg.int_value[2] - 1], REG_SIZE) == 0)
-        prcs->carry = 1;
-    else
-        prcs->carry = 0;
+    prcs->carry = (ft_str_to_int(prcs->reg[arg.int_value[2] - 1], REG_SIZE) == 0) ? 1 : 0;
 }
 

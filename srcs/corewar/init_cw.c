@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 13:15:36 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/02 16:30:54 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 01:22:30 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		ft_create_champ(char *str, t_cw *cw, unsigned int player_count,
 	buff[sizeof(t_header) + CHAMP_MAX_SIZE] = 0;
 	cw->champ_nbrs[player_count] = player_count ?
 		ft_max(cw->champ_nbrs[player_count - 1] + 1, champ_nbr) : champ_nbr;
-
+	cw->champ[player_count].size = read_count - sizeof(t_header);
 	ft_check_cor_basics(buff, read_count);
 	ft_bzero(cw->champ[player_count].content, CHAMP_MAX_SIZE);
 	ft_bzero(cw->champ[player_count].name, PROG_NAME_LENGTH + 4);
@@ -152,8 +152,12 @@ int			ft_init_corewar(char **argv, t_cw *cw)
 	cw->nb_cycles = 0;
 	cw->nbr_cycles_to_die = CYCLE_TO_DIE;
 	cw->nb_prcs = cw->nb_players;
-	cw->last_alive = -1;
-	ft_bzero(cw->arena, 4096);
+	cw->last_alive = cw->nb_players - 1;
+	cw->live_counter = 0;
+	cw->last_prcs = cw->nb_players;
+	cw->last_wipe = 0;
+	ft_bzero(cw->alive, MAX_PLAYERS);
+	ft_bzero(cw->arena, MEM_SIZE);
 	i = -1;
 	while (++i < cw->nb_players)
 		ft_memcpy(&(cw->arena[i * (MEM_SIZE / cw->nb_players)]),

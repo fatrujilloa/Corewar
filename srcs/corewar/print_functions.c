@@ -6,22 +6,31 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 12:35:03 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/02 19:06:42 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/03 23:20:41 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/corewar.h"
 
+char    *ft_spaces(unsigned int n)
+{
+    if (n < 10)
+        return ("    ");
+    if (n < 100)
+        return ("   ");
+    if (n < 1000)
+        return ("  ");
+    else
+        return (" ");
+}
 
 void    ft_print_op(t_process *prcs, t_arg arg, t_op op)
 {
     int i;
-    int aux;
     
-    ft_printf("P   %u | %s ", prcs->nb + 1, op.name);
-    aux = (op.opcode == 11) ? arg.nb_args - 2 : arg.nb_args;
+    ft_printf("P%s%u | %s ", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name);
     i = -1;
-    while (++i < aux)
+    while (++i < arg.nb_args)
     {
 		ft_printf("%s%d", arg.size[i] == 1 ? "r" : "", arg.size[i] == 1 ? (int)arg.int_value[i] : (int)arg.real_value[i]);
         //ft_printf("%s%u", arg.size[i] == 1 ? "r" : "", arg.int_value[i]);
@@ -29,16 +38,6 @@ void    ft_print_op(t_process *prcs, t_arg arg, t_op op)
             ft_printf(" ");
         else
             ft_printf("\n");
-    }
-    if (op.opcode == 11)
-    {
-        ft_printf("%d ", (int)prcs->arg.real_value[1]);
-        ft_printf("%d\n", (int)ft_str_to_int(prcs->reg[prcs->arg.int_value[2] - 1], REG_SIZE));
-       // ft_printf("prcs->arg.int_value[2] - 1 = %u, prcs->arg.type[2] = %d, prcs->arg.real_value[2] = %d\n", prcs->arg.int_value[2] - 1, prcs->arg.int_value[2] - 1, prcs->arg.real_value[2]);
-        ft_printf("      | -> store to %d + %d = %d (with pc and mod %u)\n",
-            (int)prcs->arg.real_value[1], (int)ft_str_to_int(prcs->reg[prcs->arg.int_value[2] - 1], REG_SIZE),
-            (int)prcs->arg.real_value[1] + (int)ft_str_to_int(prcs->reg[prcs->arg.int_value[2] - 1], REG_SIZE),
-            (int)((prcs->pc + (prcs->arg.real_value[1] + ft_str_to_int(prcs->reg[prcs->arg.int_value[2] - 1], REG_SIZE) % IDX_MOD)) % MEM_SIZE));
     }
 }
 
