@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:41:49 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/04 02:02:16 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 14:53:08 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void    ft_aff(t_cw *cw, t_process *prcs, int i, t_op op) // REG
     (void)op;
     
     arg = prcs->arg;
-    //ft_printf("Aff: %c\n", (int)ft_str_to_int(prcs->reg[arg.int_value[0] - 1], REG_SIZE));
-    prcs->pc = (prcs->pc + 3) % MEM_SIZE;
+    //ft_printf("Aff: %c\n", ft_str_to_int(prcs->reg[arg.int_value[0] - 1], REG_SIZE));
+    prcs->pc = (prcs->pc + arg.total_size) % MEM_SIZE;
 }
 
 void    ft_and(t_cw *cw, t_process *prcs, int i, t_op op) //ARG, ARG, REG

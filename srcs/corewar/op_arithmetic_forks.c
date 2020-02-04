@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:50:25 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/04 02:08:44 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 18:47:47 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,37 +73,34 @@ void    ft_sub(t_cw *cw, t_process *prcs, int i, t_op op) // 3 REG
 
 void    ft_fork(t_cw *cw, t_process *prcs, int i, t_op op)
 {
-    unsigned int    v;
-    int             j;
+    int             int_address;
+    unsigned int    uint_address;
+    t_arg   arg;
 
-    (void) i;
-
-    v = 0;
-    j = -1;
-    while (++j < IND_SIZE)
-        v = 256 * v + (unsigned char)cw->arena[(prcs->pc + 1 + j) % MEM_SIZE];
-    if (!ft_new_process(cw, cw->head, prcs, (prcs->pc + (short int)v % IDX_MOD) % MEM_SIZE))
-        return ; //I Have a malloc here
-    
+    (void)i;
+    arg = prcs->arg;
+    int_address = (prcs->pc + (short int)arg.int_value[0] % IDX_MOD) % MEM_SIZE;
+    uint_address =  (int_address + MEM_SIZE) % MEM_SIZE;
     cw->nb_prcs++;
-    ft_printf("P%s%u | %s %hd (%d)\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, v, (prcs->pc + (short int)v % IDX_MOD) % MEM_SIZE);
+    ft_new_process(cw, cw->head, prcs, uint_address);
+    ft_printf("P%s%u | %s %d (%d)\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name,
+    (short int)arg.int_value[0], int_address);
     prcs->pc = (prcs->pc + 1 + IND_SIZE) % MEM_SIZE;
 }
 
 void    ft_lfork(t_cw *cw, t_process *prcs, int i, t_op op)
 {
-    unsigned int    v;
-    int             j;
+    int             int_address;
+    unsigned int    uint_address;
+    t_arg   arg;
 
     (void) i;
-
-    v = 0;
-    j = -1;
-    while (++j < IND_SIZE)
-        v = (256 * v + (unsigned char)cw->arena[(prcs->pc + 1 + j) % MEM_SIZE]);
-    if (!ft_new_process(cw, cw->head, prcs, (prcs->pc + v) % MEM_SIZE))
-        return ; //I Have a malloc here
+    arg = prcs->arg;
+    int_address = (prcs->pc + (short int)arg.int_value[0]);
+    uint_address = (int_address % MEM_SIZE + MEM_SIZE) % MEM_SIZE;
     cw->nb_prcs++;
-    ft_printf("P%s%u | %s %d (%d)\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, v, prcs->pc + v);
+    ft_new_process(cw, cw->head, prcs, uint_address);
+    ft_printf("P%s%u | %s %d (%d)\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name,
+    (short int)arg.int_value[0], int_address);
     prcs->pc = (prcs->pc + 1 + IND_SIZE) % MEM_SIZE;
 }

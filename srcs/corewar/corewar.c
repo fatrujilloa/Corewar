@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 17:49:40 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/04 00:24:56 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/05 00:12:36 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,66 @@ void		ft_exec_processes(t_cw *cw, t_process *prcs)
 	while (prcs)
 	{
 		//ft_printf("The process #%u has PC = %u and alive = %d\n", prcs->nb + 1, prcs->pc, prcs->alive);
+		if (cw->nb_cycles < prcs->wait_until)
+		{	
+			prcs = prcs->next;
+			continue ;
+		}
+		op_code = (unsigned char)cw->arena[prcs->pc];
+		if (cw->nb_cycles == prcs->wait_until)
+		{
+			ft_get_args(cw, prcs, &prcs->arg, op_tab[prcs->current_op - 1]);
+			if (prcs->valid_arg == 1)
+				op_tab[prcs->current_op - 1].function(cw, prcs, prcs->champ, op_tab[prcs->current_op - 1]);
+			else if (cw->nb_cycles == prcs->wait_until)
+				prcs->pc = (prcs->pc + prcs->arg.total_size) % MEM_SIZE;
+		}
+		else if (!(op_code == 0 || op_code > 16))
+		{
+				prcs->current_op = op_code;
+				prcs->wait_until = cw->nb_cycles + op_tab[op_code - 1].cycle - 1;
+		}
+		else
+			prcs->pc = (prcs->pc + 1) % MEM_SIZE;
+		prcs = prcs->next;
+	}
+}
+/*
+
+{
+	unsigned char	op_code;
+
+	while (prcs)
+	{
+		//ft_printf("The process #%u has PC = %u and alive = %d\n", prcs->nb + 1, prcs->pc, prcs->alive);
+		if (cw->nb_cycles < prcs->wait_until)
+		{	
+			prcs = prcs->next;
+			continue ;
+		}
+		op_code = (unsigned char)cw->arena[prcs->pc];
+		if (cw->nb_cycles == prcs->wait_until && prcs->valid_arg == 1)
+			op_tab[prcs->current_op - 1].function(cw, prcs, prcs->champ, op_tab[prcs->current_op - 1]);
+		else if (cw->nb_cycles == prcs->wait_until)
+			prcs->pc = (prcs->pc + prcs->arg.total_size) % MEM_SIZE;
+		else if (!(op_code == 0 || op_code > 16))
+		{
+				prcs->current_op = op_code;
+				prcs->wait_until = cw->nb_cycles + op_tab[op_code - 1].cycle - 1;
+				ft_get_args(cw, prcs, &prcs->arg, op_tab[op_code - 1]);
+		}
+		else
+			prcs->pc = (prcs->pc + 1) % MEM_SIZE;
+		prcs = prcs->next;
+	}
+}
+
+{
+	unsigned char	op_code;
+
+	while (prcs)
+	{
+		ft_printf("The process #%u has PC = %u and alive = %d\n", prcs->nb + 1, prcs->pc, prcs->alive);
 		op_code = (unsigned char)cw->arena[prcs->pc];
 		if (cw->nb_cycles < prcs->wait_until)
 		{	
@@ -52,7 +112,7 @@ void		ft_exec_processes(t_cw *cw, t_process *prcs)
 		prcs = prcs->next;
 	}
 }
-
+*/
 void		ft_check_processes(t_cw *cw, t_process **head_prcs)
 {
 	t_process	*tmp;
@@ -110,11 +170,12 @@ int			ft_cw(t_cw *cw)
 		ft_exec_processes(cw, cw->prcs);
 		if ((cw->nb_cycles - cw->last_wipe) % cw->nbr_cycles_to_die == 0)
 		{
+			//ft_printf("live_counter = %u and nb_prcs = %u\n", cw->live_counter, cw->nb_prcs);
 			//ft_check_champions(cw, cw->prcs);
 			if (cw->live_counter >= NBR_LIVE)
 			{
 				cw->nbr_cycles_to_die -= CYCLE_DELTA;
-				ft_printf("Cycle to die is now %u\n", cw->nbr_cycles_to_die);
+				ft_printf("Cycle to die is now %d\n", cw->nbr_cycles_to_die);
 			}
 			ft_check_processes(cw, &cw->prcs);
 			cw->last_wipe = cw->nb_cycles;

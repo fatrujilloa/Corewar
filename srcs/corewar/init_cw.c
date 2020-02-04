@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 13:15:36 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/04 01:22:30 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 16:28:23 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void		ft_init_processes(t_cw *cw)
 		process->champ_nb = cw->champ_nbrs[i];
 		process->nb = i;
 		process->valid_arg = 0;
+		process->current_op = 0;
 		j = -1;
 		while (++j < REG_NUMBER)
 			ft_bzero(process->reg[j], REG_SIZE);

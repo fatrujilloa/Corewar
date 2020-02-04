@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:38:28 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/04 01:20:49 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 13:41:45 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void    ft_real_values(t_cw *cw, t_process *prcs, t_arg *arg)
         if (arg->type[i] == REG_CODE)
             arg->real_value[i] = ft_str_to_int(prcs->reg[arg->int_value[i] - 1], REG_SIZE);
         else if (arg->type[i] == IND_CODE)
-            arg->real_value[i] = ft_recover_value_arena(cw, (prcs->pc + arg->int_value[i]) % MEM_SIZE, 4);
+            arg->real_value[i] = ft_recover_value_arena(cw, (prcs->pc + arg->int_value[i]) % MEM_SIZE, REG_SIZE);
         else
             arg->real_value[i] = arg->int_value[i];
         aux += arg->size[i];
@@ -68,7 +68,7 @@ void     ft_arg_values(t_cw *cw, t_process *prcs, t_arg *arg)
 
     aux = 2;
     i = -1;
-    while (++i < arg->nb_args && arg->size[i])
+    while (++i < arg->nb_args)
     {
         ft_arg_value(cw, (prcs->pc + aux) % MEM_SIZE, arg, i);
         if (arg->type[i] == REG_CODE && (arg->int_value[i] == 0 ||

@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:35:04 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/03 22:42:36 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 18:40:33 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void    ft_init_arg(t_arg *arg, unsigned char nb_args)
 void    ft_get_args(t_cw *cw, t_process *prcs, t_arg *arg, t_op op)
 {
     unsigned int    a;
-    unsigned int    b;
+    int             b;
     int             i;
     unsigned char   byte;
 
@@ -62,10 +62,14 @@ void    ft_get_args(t_cw *cw, t_process *prcs, t_arg *arg, t_op op)
     if (op.opcode == 1 || op.opcode == 9 || op.opcode == 12 || op.opcode == 15)
     {
         a = 0;
+        b = (op.opcode == 1 ? DIR_SIZE : IND_SIZE);
         i = -1;
-        while (++i < DIR_SIZE)
+        while (++i < b)
+        {
             a = 256 * a + (unsigned char)cw->arena[(prcs->pc + 1 + i) % MEM_SIZE];
+        }
         arg->int_value[0] = a;
+        arg->total_size = 1 + b;
         return ;
     }
     byte = (unsigned char)cw->arena[(prcs->pc + 1) % MEM_SIZE];

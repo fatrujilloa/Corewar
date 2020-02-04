@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:41:02 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/04 02:03:01 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/04 23:23:45 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ void    ft_live(t_cw *cw, t_process *prcs, int i, t_op op) // DIR
     prcs->pc = (prcs->pc + 1 + DIR_SIZE) % MEM_SIZE;    
 }
 
-void    ft_st(t_cw *cw, t_process *prcs, int i, t_op op) //REG, IND | REG
+void    ft_st(t_cw *cw, t_process *prcs, int i, t_op op) //REG, IND | REG //CHECK?
 {
     int     j;
     t_arg   arg;
     
-        (void)i;
+    (void)i;
     arg = prcs->arg;
     j = -1;
     if (arg.type[1] == REG_CODE)
@@ -47,9 +47,9 @@ void    ft_st(t_cw *cw, t_process *prcs, int i, t_op op) //REG, IND | REG
             prcs->reg[arg.int_value[1] - 1][j] = prcs->reg[arg.int_value[0] - 1][j];
     else
         while (++j < REG_SIZE)
-            cw->arena[(prcs->pc + j + arg.int_value[1] % IDX_MOD) % MEM_SIZE]
+            cw->arena[(prcs->pc + j + (short int)arg.int_value[1] % IDX_MOD) % MEM_SIZE]
             = prcs->reg[arg.int_value[0] - 1][j];
-    ft_printf("P%s%u | %s r%d %d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.int_value[0], arg.int_value[1]);
+    ft_printf("P%s%u | %s r%d %d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.int_value[0], (short int)arg.int_value[1]);
     prcs->pc = (prcs->pc + arg.total_size) % MEM_SIZE;
 }
 
@@ -72,8 +72,8 @@ void    ft_sti(t_cw *cw, t_process *prcs, int i, t_op op) //REG, ARG, DIR | REG
     */
     address_int = (prcs->pc + ((arg.type[1] == DIR_CODE ? (short int)arg.real_value[1] : (int)arg.real_value[1])
         + (arg.type[2] == DIR_CODE ? (short int)arg.real_value[2] : (int)arg.real_value[2]))
-        % IDX_MOD) % MEM_SIZE;
-    address_uint = (address_int + MEM_SIZE) % MEM_SIZE;
+        % IDX_MOD);
+    address_uint = (address_int % MEM_SIZE + MEM_SIZE) % MEM_SIZE;
     j = -1;
     while (++j < REG_SIZE)
         cw->arena[(address_uint + j) % MEM_SIZE] =
@@ -94,23 +94,23 @@ void    ft_sti(t_cw *cw, t_process *prcs, int i, t_op op) //REG, ARG, DIR | REG
 
 void    ft_zjmp(t_cw *cw, t_process *prcs, int i, t_op op) //NEED TO BE CHECKED
 {
-    int             j;
-    unsigned int    v;
+    int             int_address;
+    unsigned int    uint_address;
+    t_arg   arg;
 
     (void)i;
-
-    v = 0;
-    j = -1;
-    while (++j < IND_SIZE)
-        v = (256 * v + (unsigned char)cw->arena[(prcs->pc + 1 + j) % MEM_SIZE]);
+    (void)cw;
+    arg = prcs->arg;
+    int_address = (prcs->pc + (short int)arg.int_value[0]) % MEM_SIZE;
+    uint_address =  (int_address + MEM_SIZE) % MEM_SIZE;
     if (prcs->carry)
     {
-        ft_printf("P%s%u | %s %d OK\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, v);
-        prcs->pc = (prcs->pc + v % IDX_MOD) % MEM_SIZE;
+        ft_printf("P%s%u | %s %hd OK\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.int_value[0]);
+        prcs->pc = uint_address;
     }
     else
     {
-        ft_printf("P%s%u | %s %d FAILED\n", ft_spaces(prcs->nb + 1) , prcs->nb + 1, op.name, v);
+        ft_printf("P%s%u | %s %hd FAILED\n", ft_spaces(prcs->nb + 1) , prcs->nb + 1, op.name, arg.int_value[0]);
         prcs->pc = (prcs->pc + 1 + IND_SIZE) % MEM_SIZE;
     }
 }
