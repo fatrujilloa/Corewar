@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:41:02 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/04 23:23:45 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/06 11:40:05 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void    ft_st(t_cw *cw, t_process *prcs, int i, t_op op) //REG, IND | REG //CHEC
             prcs->reg[arg.int_value[1] - 1][j] = prcs->reg[arg.int_value[0] - 1][j];
     else
         while (++j < REG_SIZE)
-            cw->arena[(prcs->pc + j + (short int)arg.int_value[1] % IDX_MOD) % MEM_SIZE]
+            cw->arena[((prcs->pc + j + (short int)arg.int_value[1] % IDX_MOD) % MEM_SIZE + MEM_SIZE) % MEM_SIZE]
             = prcs->reg[arg.int_value[0] - 1][j];
     ft_printf("P%s%u | %s r%d %d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.int_value[0], (short int)arg.int_value[1]);
     prcs->pc = (prcs->pc + arg.total_size) % MEM_SIZE;
