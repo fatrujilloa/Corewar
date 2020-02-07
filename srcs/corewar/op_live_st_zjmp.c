@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:41:02 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/06 11:40:05 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/07 11:54:39 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void    ft_zjmp(t_cw *cw, t_process *prcs, int i, t_op op) //NEED TO BE CHECKED
     (void)i;
     (void)cw;
     arg = prcs->arg;
-    int_address = (prcs->pc + (short int)arg.int_value[0]) % MEM_SIZE;
+    int_address = (prcs->pc + (short int)arg.int_value[0] % IDX_MOD) % MEM_SIZE;
     uint_address =  (int_address + MEM_SIZE) % MEM_SIZE;
     if (prcs->carry)
     {

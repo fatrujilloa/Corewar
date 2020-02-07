@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 17:49:40 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/06 11:46:22 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/07 12:06:44 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,27 +163,27 @@ void	ft_check_champions(t_cw *cw, t_process *prcs)
 
 int			ft_cw(t_cw *cw)
 {
-	while(cw->nbr_cycles_to_die > 0 && (!cw->dump_flag || cw->nb_cycles < cw->dump))
+	while((!cw->dump_flag || cw->nb_cycles < cw->dump))
 	{
 		cw->nb_cycles++;
 		ft_printf("It is now cycle %d\n", cw->nb_cycles);
 		ft_exec_processes(cw, cw->prcs);
-		if ((cw->nb_cycles - cw->last_wipe) % cw->nbr_cycles_to_die == 0)
+		if ((cw->nb_cycles - cw->last_wipe) % cw->nbr_cycles_to_die == 0 || cw->nbr_cycles_to_die <= 0)
 		{
 			//ft_printf("live_counter = %u and nb_prcs = %u\n", cw->live_counter, cw->nb_prcs);
 			//ft_check_champions(cw, cw->prcs);
+			ft_check_processes(cw, &cw->prcs);
 			if (cw->live_counter >= NBR_LIVE)
 			{
 				cw->nbr_cycles_to_die -= CYCLE_DELTA;
 				ft_printf("Cycle to die is now %d\n", cw->nbr_cycles_to_die);
 			}
-			ft_check_processes(cw, &cw->prcs);
 			cw->last_wipe = cw->nb_cycles;
 			cw->live_counter = 0;
-			if (cw->nb_prcs == 0)
-				return (cw->last_alive);
 			//ft_printf("There are %d processes left\n", cw->nb_prcs);
 		}
+		if (cw->nb_prcs == 0)
+			return (cw->last_alive);
 	}
 	return (cw->last_alive);
 }

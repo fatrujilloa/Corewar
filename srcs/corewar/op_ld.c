@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 22:43:36 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/04 23:30:56 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/06 12:48:59 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void    ft_ld(t_cw *cw, t_process *prcs, int i, t_op op) // DIR | IND, REG
     j = -1;
     if (arg.type[0] == IND_CODE)
         while (++j < REG_SIZE)
-            prcs->reg[arg.int_value[1] - 1][j] = cw->arena[((prcs->pc + j + (int)arg.int_value[0] % IDX_MOD) % MEM_SIZE + MEM_SIZE) % MEM_SIZE];
+            prcs->reg[arg.int_value[1] - 1][j] = cw->arena[((prcs->pc + j + (short int)arg.int_value[0] % IDX_MOD) % MEM_SIZE + MEM_SIZE) % MEM_SIZE];
     else
         while (++j < DIR_SIZE)
              prcs->reg[arg.int_value[1] - 1][j] = arg.value[0][j];
     ft_printf("P%s%u | %s %d r%d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.type[0] == IND_CODE ?
-        ft_recover_value_arena(cw, ((prcs->pc + (int)(arg.int_value[0] % IDX_MOD)) % MEM_SIZE + MEM_SIZE) % MEM_SIZE, REG_SIZE)
+        ft_recover_value_arena(cw, ((prcs->pc + (short int)arg.int_value[0] % IDX_MOD) % MEM_SIZE + MEM_SIZE) % MEM_SIZE, REG_SIZE)
         : arg.real_value[0], arg.int_value[1]);
 
     //ft_printf("P%s%u | %s %d r%d\n", ft_spaces(prcs->nb + 1), prcs->nb + 1, op.name, arg.real_value[0], arg.int_value[1]);
