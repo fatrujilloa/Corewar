@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 12:25:55 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/04 23:11:18 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/07 17:09:59 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct		s_cw
 	int				nb_players;
 	unsigned int	nb_cycles;
 	int				nbr_cycles_to_die;
+	unsigned int	nb_checks;
 	unsigned int	dump;
 	char			dump_flag;
 	//int				number_flag;

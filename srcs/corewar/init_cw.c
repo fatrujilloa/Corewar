@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/12 13:15:36 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/04 16:28:23 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/07 17:10:17 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ int			ft_init_corewar(char **argv, t_cw *cw)
 	cw->nb_cycles = 0;
 	cw->nbr_cycles_to_die = CYCLE_TO_DIE;
 	cw->nb_prcs = cw->nb_players;
+	cw->nb_checks = 0;
 	cw->last_alive = cw->nb_players - 1;
 	cw->live_counter = 0;
 	cw->last_prcs = cw->nb_players;

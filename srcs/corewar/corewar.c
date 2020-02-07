@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 17:49:40 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/02/07 12:06:44 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/07 19:48:39 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,13 +173,15 @@ int			ft_cw(t_cw *cw)
 			//ft_printf("live_counter = %u and nb_prcs = %u\n", cw->live_counter, cw->nb_prcs);
 			//ft_check_champions(cw, cw->prcs);
 			ft_check_processes(cw, &cw->prcs);
-			if (cw->live_counter >= NBR_LIVE)
+			if (cw->live_counter >= NBR_LIVE || cw->nb_checks >= MAX_CHECKS)
 			{
 				cw->nbr_cycles_to_die -= CYCLE_DELTA;
+				cw->nb_checks = 0;
 				ft_printf("Cycle to die is now %d\n", cw->nbr_cycles_to_die);
 			}
 			cw->last_wipe = cw->nb_cycles;
 			cw->live_counter = 0;
+			cw->nb_checks++;
 			//ft_printf("There are %d processes left\n", cw->nb_prcs);
 		}
 		if (cw->nb_prcs == 0)

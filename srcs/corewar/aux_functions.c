@@ -6,7 +6,7 @@
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/01 17:44:46 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/06 11:46:55 by ftrujill         ###   ########.fr       */
+/*   Updated: 2020/02/07 19:47:42 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,11 @@ void	ft_lstdelnext(t_process **lst, t_process **prev)
 	{
 		tmp = *lst;
 		*lst = tmp->next ? tmp->next : NULL;
-		//free(tmp);
+		free(tmp);
 		return ;
 	}
 	if ((tmp = (*prev)->next) == NULL)
 		return ;
 	(*prev)->next = tmp->next;
-	//free(tmp);
+	free(tmp);
 }
