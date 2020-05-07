@@ -21,7 +21,7 @@ char	**ft_split_whitespaces(const char *str)
 
 	i = 0;
 	j = 0;
-	if ((res = malloc(sizeof(char*) * (ft_count_words((char *)str) + 1))) == NULL)
+	if (!(res = malloc(sizeof(char*) * (ft_count_words((char *)str) + 1))))
 		return (NULL);
 	while (str[i])
 	{
@@ -30,7 +30,7 @@ char	**ft_split_whitespaces(const char *str)
 		if (str[i])
 		{
 			k = 0;
-			if ((res[j] = malloc(sizeof(char) * ft_ln_w((char *)str, i) + 1)) == NULL)
+			if (!(res[j] = malloc(sizeof(char) * ft_ln_w((char *)str, i) + 1)))
 				return (NULL);
 			while (str[i] != '\t' && str[i] != ' ' && str[i] != '\n' && str[i])
 				res[j][k++] = str[i++];

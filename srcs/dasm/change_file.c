@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   change_file.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gmoindro <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/30 12:31:21 by gmoindro          #+#    #+#             */
+/*   Updated: 2020/01/30 12:35:06 by gmoindro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/dasm.h"
 
 static char	*ft_strcat_2(char *s1, const char *s2)
 {
-	int     len;
-	int     i;
-	int     len_2;
-	char    *s;
+	int		len;
+	int		i;
+	int		len_2;
+	char	*s;
 
 	len = ft_strlen(s1);
 	len_2 = ft_strlen(s2);
@@ -24,7 +36,6 @@ static char	*ft_strcat_2(char *s1, const char *s2)
 		len++;
 		i++;
 	}
-	free(s1);
 	s[len] = '\0';
 	return (s);
 }
@@ -55,8 +66,9 @@ static int	ft_strrchr_nbr(const char *s, int c)
 
 char		*change_cor_s(char *str)
 {
-	int	i;
+	int		i;
 	char	*s;
+	char	*s_2;
 
 	i = 0;
 	if (ft_strchr(str, '.') == NULL)
@@ -70,6 +82,7 @@ char		*change_cor_s(char *str)
 		return (NULL);
 	}
 	s = ft_strsub(str, 0, ft_strrchr_nbr(str, '.'));
-	s = ft_strcat_2(s, "_dasm.s\0");
-	return (s);
+	s_2 = ft_strcat_2(s, "_dasm.s\0");
+	free(s);
+	return (s_2);
 }

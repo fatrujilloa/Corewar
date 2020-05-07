@@ -3,16 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   options.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rbeaufre <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/04 19:21:25 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/01/05 17:12:04 by rbeaufre         ###   ########.fr       */
+/*   Created: 2020/05/06 18:26:40 by ftrujill          #+#    #+#             */
+/*   Updated: 2020/05/07 02:41:13 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/corewar.h"
 
-int	ft_display_options(void)
+void	ft_strswap(char *a, char *b, unsigned int size)
+{
+	char *t;
+
+	t = (char*)malloc(size + 1);
+	ft_memcpy(t, a, size);
+	ft_memcpy(a, b, size);
+	ft_memcpy(b, t, size);
+	free(t);
+}
+
+int		ft_display_options(void)
 {
 	ft_printf("{RED}./corewar{EOC} {YELLOW}[-dump nbr_cycles] {EOC}");
 	ft_printf("{GREEN}[{EOC}{YELLOW}[-n number]{EOC}");

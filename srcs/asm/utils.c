@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gmoindro <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/17 17:07:41 by gmoindro          #+#    #+#             */
+/*   Updated: 2020/02/04 16:40:50 by gmoindro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/asm.h"
 
 int	ft_len_next(char *line, int *quote)
@@ -14,8 +26,9 @@ int	ft_len_next(char *line, int *quote)
 		else if (*quote == 1)
 			len++;
 		else if (line[i] == COMMENT_CHAR)
-			break;
-		else if (*quote != 1 && line[i] != ' ' && line[i] != '\t' && line[i] != '\n')
+			break ;
+		else if (*quote != 1 && line[i] != ' '
+				&& line[i] != '\t' && line[i] != '\n')
 			return (-1);
 		i++;
 	}
@@ -38,19 +51,24 @@ int	ft_len_begin(char *line, char *str, int *quote)
 		else if (*quote == 1)
 			len++;
 		else if (line[i] == COMMENT_CHAR)
-			break;
-		else if (*quote != 1 && line[i] != ' ' && line[i] != '\t' && line[i] != '\n')
+			break ;
+		else if (*quote != 1 && line[i] != ' '
+				&& line[i] != '\t' && line[i] != '\n')
 			return (-1);
 		i++;
 	}
 	return (len);
 }
 
-int	check_nothing_before(char *line, char *str)
+int	check_n_b(int i, char *str)
 {
-	int	i;
+	if (!str[i])
+		return (1);
+	return (0);
+}
 
-	i = 0;
+int	check_nothing_before(char *line, char *str, int i)
+{
 	while (*line)
 	{
 		if (str[i] && *line == str[i])
@@ -64,10 +82,7 @@ int	check_nothing_before(char *line, char *str)
 					line = line + 1;
 					i++;
 				}
-				if (!str[i])
-					return (1);
-				else
-					return (0);
+				return (check_n_b(i, str));
 			}
 		}
 		else if (*line != ' ' && *line != '\t' && *line != '\n')
@@ -88,9 +103,9 @@ int	check_nothing(char *str)
 	{
 		if (str[i] == '#')
 			return (1);
-		if (str[i] != ' ' && str[i] != '\t' && str[i] == '\n')
+		if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
 			return (0);
-				i++;
+		i++;
 	}
 	return (1);
 }

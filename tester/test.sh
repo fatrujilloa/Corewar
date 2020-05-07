@@ -5,7 +5,7 @@ map_good=0
 map_total=0
 go=0
 
-echo "\033[0;33mBienvenue dans le checker - auteur : gmoindro & rbeaufre\033[0m\n"
+echo "\033[0;33mBienvenue dans le checker - auteur : gmoindro && ftrujill && rbeaufre && auguyon\033[0m\n"
 
 if [ -d "42" ];then
 	echo "Next time, let the program run until the end or put some champions in it\n"

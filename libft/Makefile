@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: rbeaufre <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/09 17:09:36 by rbeaufre          #+#    #+#              #
-#    Updated: 2020/01/25 16:34:33 by ftrujill         ###   ########.fr        #
+#    Updated: 2019/11/23 18:23:26 by rbeaufre         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ HEADERS = libft.h
 INCLUDES = $(addprefix $(INCLUDES_DIR)/, $(HEADERS))
 
 CCC = gcc
-CFLAGS = -O3 -Wall -Wextra -Werror -I $(INCLUDES)
+CFLAGS = -Wall -Wextra -Werror -I $(INCLUDES)
 
 RED := "\033[0;31m"
 GREEN := "\033[0;32m"

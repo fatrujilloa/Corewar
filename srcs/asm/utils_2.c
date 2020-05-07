@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_2.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gmoindro <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/17 17:08:39 by gmoindro          #+#    #+#             */
+/*   Updated: 2020/02/04 14:33:14 by gmoindro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/asm.h"
 
 int	ft_str_isdigit(char *str)
@@ -23,7 +35,7 @@ int	check_t_reg(char *str)
 	str++;
 	if (ft_str_isdigit(str) == 0)
 		return (-1);
-	if (ft_atoi(str) > REG_NUMBER || ft_atoi(str) < 1)
+	if (ft_atoi(str) > 99 || ft_atoi(str) < 0)
 		return (-1);
 	return (1);
 }

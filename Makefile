@@ -27,46 +27,47 @@ FLAGS			:= -g -Wall -Wextra -Werror
 # =========== Files ============ #
 #
 ASM_SRCS_FILES		:=	asm.c \
-				op.c \
+				asm2.c \
 				change_file.c \
 				first_turn.c \
+				first_turn2.c \
 				utils.c \
 				check_instruction.c \
+				check_instruction2.c \
+				check_instruction3.c \
 				utils_2.c \
 				second_turn.c \
 				third_turn.c \
+				third_turn2.c \
 				utils_3.c \
 				ft_printf_binaire.c \
-				../corewar/aux_functions.c \
-				../corewar/op_aff_logical.c \
-				../corewar/op_arithmetic_forks.c \
-				../corewar/op_ld.c \
-				../corewar/op_live_st_zjmp.c \
-				../corewar/op_aux_functions.c \
-				../corewar/get_args_1.c \
-				../corewar/get_args_2.c \
-				../corewar/print_functions.c \
+				ft_printf_binaire2.c \
+				ft_printf_binaire3.c \
+				ft_printf_binaire4.c \
+				ft_printf_binaire5.c \
+				init_op_tab.c \
+				init_op_tab2.c \
+				init_op_tab3.c \
+				init_op_tab4.c \
 
 DASM_SRCS_FILES		:=	dasm.c \
+				dasm2.c \
 				change_file.c \
 				begin.c \
+				begin2.c \
 				init.c \
 				then.c \
-				op.c \
+				then2.c \
 				write_argu.c \
-				../corewar/aux_functions.c \
-				../corewar/op_aff_logical.c \
-				../corewar/op_arithmetic_forks.c \
-				../corewar/op_ld.c \
-				../corewar/op_live_st_zjmp.c \
-				../corewar/op_aux_functions.c \
-				../corewar/get_args_1.c \
-				../corewar/get_args_2.c \
-				../corewar/print_functions.c \
+				init_op_tab.c \
+				init_op_tab2.c \
+				init_op_tab3.c \
+				init_op_tab4.c \
 
 CORE_SRCS_FILES		:=	corewar.c \
 				op.c \
 				options.c \
+				check_operation.c \
 				print_functions.c \
 				aux_functions.c \
 				init_aux_functions.c \
@@ -158,6 +159,7 @@ clean:
 	@make -C $(LIBFT_PATH) clean &> /dev/null
 	@rm -fv $(ASM_OBJS) $(DASM_OBJS) $(CORE_OBJS)
 	@rmdir $(OBJS_PATH) 2> /dev/null || true
+	@rm -rf objs/
 
 fclean: clean
 	@make -C $(LIBFT_PATH) fclean &> /dev/null

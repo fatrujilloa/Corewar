@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/01 17:44:46 by ftrujill          #+#    #+#             */
-/*   Updated: 2020/02/07 19:47:42 by ftrujill         ###   ########.fr       */
+/*   Created: 2020/05/06 16:26:47 by ftrujill          #+#    #+#             */
+/*   Updated: 2020/05/06 16:27:20 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,22 @@ unsigned int	ft_max(unsigned int a, unsigned int b)
 	return (a > b ? a : b);
 }
 
-void    ft_strnrev(unsigned char *str, unsigned int size)
+void			ft_strnrev(unsigned char *str, unsigned int size)
 {
-    unsigned int    i;
-    char            tmp;
+	unsigned int	i;
+	char			tmp;
 
-    i = 0;
-    while (i < size / 2)
-    {
-        tmp = str[i];
-        str[i] = str[size - 1 - i];
-        str[size - 1 - i] = tmp;
-        i++;
-    }
+	i = 0;
+	while (i < size / 2)
+	{
+		tmp = str[i];
+		str[i] = str[size - 1 - i];
+		str[size - 1 - i] = tmp;
+		i++;
+	}
 }
 
-int		ft_isstrnum(char *str)
+int				ft_isstrnum(char *str)
 {
 	int i;
 
@@ -71,7 +71,7 @@ long long int	ft_mod_atoi(const char *str)
 	return (number);
 }
 
-void	ft_lstdelnext(t_process **lst, t_process **prev)
+void			ft_lstdelnext(t_process **lst, t_process **prev)
 {
 	t_process	*tmp;
 

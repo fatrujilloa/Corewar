@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gmoindro <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/30 12:35:44 by gmoindro          #+#    #+#             */
+/*   Updated: 2020/02/04 17:52:03 by gmoindro         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/dasm.h"
 
 char	**init_tab(void)
 {
 	char	**tab;
-	int	nb;
-	int	i;
+	int		nb;
+	int		i[2];
 
 	nb = PROG_NAME_LENGTH + COMMENT_LENGTH + (CHAMP_MAX_SIZE / 2);
 	if (!(tab = (char **)malloc(sizeof(char *) * (nb + 1))))
@@ -16,13 +28,15 @@ char	**init_tab(void)
 	if (!(tab[1] = (char *)malloc(sizeof(char) * (COMMENT_LENGTH + 1))))
 		return (NULL);
 	tab[1][COMMENT_LENGTH] = '\0';
-	i = 2;
-	while (i < nb)
+	i[0] = 2;
+	while (i[0] < nb)
 	{
-		if (!(tab[i] = (char *)malloc(sizeof(char) * (41))))
+		i[1] = -1;
+		if (!(tab[i[0]] = (char *)malloc(sizeof(char) * (41))))
 			return (NULL);
-		tab[i][40] = '\0';
-		i++;
+		while (++i[1] < 41)
+			tab[i[0]][i[1]] = 0;
+		i[0]++;
 	}
 	return (tab);
 }

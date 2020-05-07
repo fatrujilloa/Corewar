@@ -35,7 +35,7 @@ static t_fd_list	*ft_locate_fd(t_fd_list **files, int fd)
 	return (new);
 }
 
-static int		ft_bks(char *str)
+static int			ft_bks(char *str)
 {
 	int i;
 
@@ -49,7 +49,7 @@ static int		ft_bks(char *str)
 	return (-1);
 }
 
-static int		ft_allocate_line(char *str, char **line)
+static int			ft_allocate_line(char *str, char **line)
 {
 	int		index;
 
@@ -73,14 +73,14 @@ static int		ft_allocate_line(char *str, char **line)
 	return (-1);
 }
 
-static void		ft_swap_free(char **tmp, char *buf, char **str)
+static void			ft_swap_free(char **tmp, char *buf, char **str)
 {
 	*tmp = ft_strjoin(*str, buf);
 	free(*str);
 	*str = *tmp;
 }
 
-int			get_next_line(const int fd, char **line)
+int					get_next_line(const int fd, char **line)
 {
 	static t_fd_list	*files = NULL;
 	t_fd_list			*l;

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ftrujill <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/12 14:45:54 by rbeaufre          #+#    #+#             */
-/*   Updated: 2020/01/23 17:57:06 by ftrujill         ###   ########.fr       */
+/*   Created: 2020/05/06 18:28:36 by ftrujill          #+#    #+#             */
+/*   Updated: 2020/05/06 18:28:58 by ftrujill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static int		ft_is_line_empty(char *str, int i, int size, int *flag)
 	j = 0;
 	while (j < 16 && i + j < size)
 	{
-		if ((unsigned char)(str[i + j] % 16) != 0 || (unsigned char)((str[i] / 16) % 16) != 0)
+		if ((unsigned char)(str[i + j] % 16) != 0
+			|| (unsigned char)((str[i] / 16) % 16) != 0)
 			return (0);
 		j++;
 	}
@@ -43,7 +44,6 @@ int				ft_print_hexa(char *str, int size)
 		{
 			flag = 1;
 			if (ft_is_line_empty(str, i, size, &flag) == 1)
-				//ft_printf("\n*");
 				i = i * 1;
 			else
 				ft_printf("\n0x0%03x : ", i);
